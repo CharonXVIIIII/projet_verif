@@ -3,6 +3,8 @@
 #define Q 2
 #define PQ 3
 #define QP 4
+#define request req[0] 
+#define grant user[2]@impression
 
 byte S = Z;
 byte in_critical_section = 0;
@@ -57,6 +59,20 @@ proctype ProcessusQ() {
     fi
   od
 }
+
+
+never  {    /* !([] (request -> (<> grant))) */
+T0_init:
+	do
+	:: (!((grant)) && (request)) -> goto accept_S4;
+	:: (1) -> goto T0_init
+	od;
+accept_S4:
+	do
+	:: (! ((grant))) -> goto accept_S4
+	od;
+}
+
 
 init {
   run ProcessusP();
