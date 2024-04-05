@@ -3,11 +3,14 @@
 #define Q 2
 #define PQ 3
 #define QP 4
-#define request req[0] 
-#define grant user[2]@impression
+#define request req[0]
+#define grant user[2] 
 
 byte S = Z;
 byte in_critical_section = 0;
+byte user[3];
+byte req[1];
+
 proctype ProcessusP() {
   do
   :: true ->
@@ -60,8 +63,7 @@ proctype ProcessusQ() {
   od
 }
 
-
-never  {    /* !([] (request -> (<> grant))) */
+never { /* !([] (request -> (<> grant))) */
 T0_init:
 	do
 	:: (!((grant)) && (request)) -> goto accept_S4;
@@ -72,7 +74,6 @@ accept_S4:
 	:: (! ((grant))) -> goto accept_S4
 	od;
 }
-
 
 init {
   run ProcessusP();
